@@ -31,9 +31,7 @@ class World:
 
         self.chunks : dict[tuple[int, int], Chunk] = {}
 
-        #used for animal pathing
-        self.paths : dict[tuple[int, int], npt.NDArray] = {}
-        self.path_index = 0 
+    
 
         self.clock = pygame.time.Clock().tick(FPS)
 
@@ -75,19 +73,18 @@ class World:
 
             
             if nidx not in self.chunks:
-                chunk = Chunk(nidx, self.seed, self.path_index,  self.background_assets)
-                self.path_index += 1
+                chunk = Chunk(nidx, self.seed,   self.background_assets)
                 self.chunks[nidx] = chunk
 
-                # Only generate raw here — DO NOT collapse yet
+                # Only generate raw here
 
             neighbors[nidx] = self.chunks[nidx]
 
         return neighbors
 
     def _generate_chunk(self, chunk_index: tuple[int, int]) -> None:
-        chunk = Chunk(chunk_index, self.seed, self.path_index, self.background_assets)
-        self.path_index +=1
+        chunk = Chunk(chunk_index, self.seed, self.background_assets)
+
         self.chunks[chunk_index] = chunk
 
         # water collapse needs neighbors, so redo it now that chunk is registered

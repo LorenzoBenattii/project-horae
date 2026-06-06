@@ -13,22 +13,6 @@ if __name__ == "__main__":
     
     w = World(seed=69)
     clock = pygame.time.Clock()
-    a = Stag(w.chunks)
-    b = Wolf(w.chunks)
-    a.position_chunk = (20, 0)
-    a.position_local_coordinates = (8, 4)
-    a.movement_target_chunk = (20, -20)
-    a.movement_target_local_coordinates = (10, 12)
-
-    b.position_chunk = (20, 0)
-    b.position_local_coordinates = (8, 4)
-    b.movement_target_chunk = (20, -20)
-    b.movement_target_local_coordinates = (10, 12)
-
-
-
-    w.animal_manager.animals.add(a)
-    w.animal_manager.animals.add(b)
 
     camerax, cameray = 0, 0
 
@@ -41,7 +25,6 @@ if __name__ == "__main__":
         
         screen.fill((0, 0, 0))
         w.update(screen, (camerax, cameray))
-        a.update()
         
         
 
