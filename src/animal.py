@@ -106,54 +106,28 @@ class Animal:
             y = (chk_x + chk_y) * half_h + loc_x * 8 + loc_y * 8 + TREE_OVERHEAD
             return x, y
 
-        # --- base position ---
+        
         cur_x, cur_y = tile_to_iso(self.position_chunk, self.position_local)
 
-        # IMPORTANT: always define defaults (prevents UnboundLocalError)
+        
         world_x, world_y = cur_x, cur_y
 
-        # --- interpolation ---
+        
         if self.next_chunk is not None:
             nxt_x, nxt_y = tile_to_iso(self.next_chunk, self.next_local)
             world_x = cur_x + (nxt_x - cur_x) * self.movement_progress
             world_y = cur_y + (nxt_y - cur_y) * self.movement_progress
 
-        # --- anchor ---
+        
         anchor_x, anchor_y = self.ANCHOR
 
         draw_x = world_x - cam_x - anchor_x
         draw_y = world_y - cam_y - anchor_y
 
-        # --- render sprite ---
+        
         screen.blit(self.image, (draw_x, draw_y))
 
-        # =========================
-        # DEBUG (throttled)
-        # =========================
-        now = pygame.time.get_ticks()
-
-        if not hasattr(self, "debug_timer"):
-            self.debug_timer = 0
-
-        if now - self.debug_timer > 500:  # 2x per second
-            self.debug_timer = now
-
-            cy, cx = self.position_chunk
-            ly, lx = self.position_local
-
-            tile_value = self.world_chunks[(cy, cx)][ly, lx]
-
-            if Tile(tile_value).name == "WATER":
-
-                print(
-                    f"[ANIMAL DEBUG] "
-                    f"type={self.__class__.__name__} "
-                    f"chunk={self.position_chunk} "
-                    f"local={(ly, lx)} "
-                    f"tile={Tile(tile_value).name} "
-                    f"progress={self.movement_progress:.2f} "
-                    f"next={self.next_chunk}"
-                )
+        
 
     # -- Needs -- #
 
