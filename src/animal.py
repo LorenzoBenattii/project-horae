@@ -94,34 +94,64 @@ class Animal:
 
     def draw(self, screen: pygame.Surface, camera_pos: tuple[int, int]) -> None:
         cam_x, cam_y = camera_pos
-        TILE_W = 32 * SCALE
-        TILE_H = 16 * SCALE
+
         half_w = TILE_W // 2
         half_h = TILE_H // 2
-        TREE_OVERHEAD = 96
-        origin_x = half_w  # = 16
+
 
         def tile_to_iso(chunk, local):
-            chk_y, chk_x = chunk
-            loc_y, loc_x = local
-            
-            x = (chk_x - chk_y) * half_w - origin_x + origin_x + (32 * CHUNK_SIZE) // 2 + loc_x * 16 - loc_y * 16
-            y = (chk_x + chk_y) * half_h + loc_x * 8 + loc_y * 8 + TREE_OVERHEAD
+            cy, cx = chunk
+            ly, lx = local
+
+            world_x = cx * CHUNK_SIZE + lx
+            world_y = cy * CHUNK_SIZE + ly
+
+            x = (world_x - world_y) * half_w + (32 * CHUNK_SIZE) // 2
+            y = (world_x + world_y) * half_h + TREE_OVERHEAD
+
             return x, y
 
+
         cur_x, cur_y = tile_to_iso(self.position_chunk, self.position_local)
+        world_x, world_y = cur_x, cur_y
 
         if self.next_chunk is not None:
             nxt_x, nxt_y = tile_to_iso(self.next_chunk, self.next_local)
+
             world_x = cur_x + (nxt_x - cur_x) * self.movement_progress
             world_y = cur_y + (nxt_y - cur_y) * self.movement_progress
-        else:
-            world_x, world_y = cur_x, cur_y
 
-        draw_x = world_x - cam_x + half_w - self.image.get_width() // 2
-        draw_y = world_y - cam_y - (self.image.get_height() - half_h)
+        anchor_x, anchor_y = self.ANCHOR
+
+        draw_x = world_x - cam_x - anchor_x
+        draw_y = world_y - cam_y - anchor_y
+
 
         screen.blit(self.image, (draw_x, draw_y))
+
+        '''
+        if not hasattr(self, "debug_timer"):
+            self.debug_timer = 0
+
+        now = pygame.time.get_ticks()
+        if now - self.debug_timer > 500:
+            self.debug_timer = now
+
+            cy, cx = self.position_chunk
+            ly, lx = self.position_local
+
+            tile_value = self.world_chunks[(cy, cx)][ly, lx]
+
+            print(
+                f"[ANIMAL DEBUG] "
+                f"type={self.__class__.__name__} "
+                f"chunk={(cy, cx)} "
+                f"local={(ly, lx)} "
+                f"tile={Tile(tile_value).name} "
+                f"progress={self.movement_progress:.2f} "
+                f"next={self.next_chunk}"
+            )
+        '''
 
     # -- Needs -- #
 
@@ -226,6 +256,7 @@ class Animal:
         
         
         directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
         open_set = []
         heappush(open_set, (
             self._get_heuristic(start_chunk, start_local, target_chunk, target_local),
@@ -272,7 +303,7 @@ class Animal:
                 if nchunk not in self.world_chunks:
                     continue
 
-                if self.world_chunks[nchunk][ny, nx] == Tile.WATER:
+                if self.world_chunks[nchunk][ny, nx] in WATER_TILES:
                     continue
 
                 new_g = g+1
@@ -286,6 +317,9 @@ class Animal:
         return []
 
     def _move(self) -> None:
+
+
+
         if self.next_chunk is None:
             if not self.path:
                 self._update_animation_type("idle")
@@ -350,19 +384,21 @@ class Animal:
 class Stag(Animal):
     def __init__(self, world_chunks):
         super().__init__(world_chunks)
+        self.ANCHOR = (18, 34)
 
 class Badger(Animal):
     def __init__(self, world_chunks):
         super().__init__(world_chunks)
+        self.ANCHOR = ()
 
 class Boar(Animal):
     def __init__(self, world_chunks):
         super().__init__(world_chunks)
-
+        self.ANCHOR = (22, 22)
 class Wolf(Animal):
     def __init__(self, world_chunks):
         super().__init__(world_chunks)
-
+        self.ANCHOR = (31, 40)
 
 class AnimalManager:
     '''

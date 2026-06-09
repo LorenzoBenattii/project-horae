@@ -328,8 +328,7 @@ class Chunk:
 
     def draw_background_layer(self, screen : pygame.Surface, camera_pos: tuple[int, int], season: str, water_frame: int) -> None: 
         cam_x, cam_y = camera_pos
-        TILE_W = 32 * SCALE
-        TILE_H = 16 * SCALE
+
         
         half_w = TILE_W // 2
         half_h = TILE_H // 2
@@ -349,8 +348,7 @@ class Chunk:
 
     def draw_tree_layer(self, screen : pygame.Surface, camera_pos: tuple[int, int], season: str) -> None:
         cam_x, cam_y = camera_pos
-        TILE_W = 32 * SCALE
-        TILE_H = 16 * SCALE
+
         
         half_w = TILE_W // 2
         half_h = TILE_H // 2

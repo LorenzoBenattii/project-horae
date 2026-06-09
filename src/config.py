@@ -7,7 +7,7 @@ CHUNK_SIZE = 20
 
 
 TILE_W = 32 * SCALE
-TILE_H = 32 * SCALE  
+TILE_H = 16 * SCALE  
 TREE_OVERHEAD = 96
 
 CHUNK_IMAGE_WIDTH = 32 * CHUNK_SIZE
@@ -56,11 +56,24 @@ class Tile(Enum):
     WATER_RIGHT = 7
     WATER_MID = 8
 
+
+WATER_TILES = {
+    Tile.WATER.value,
+    Tile.WATER_EXT.value,
+    Tile.WATER_INT.value,
+    Tile.WATER_LEFT.value,
+    Tile.WATER_RIGHT.value,
+    Tile.WATER_MID.value,
+}
+
+
 class Biome(Enum):
     EMPTY = 0
     OCEAN = 1
     FOREST = 2
     PLAIN = 3
+
+
 
 BIOME_SCALE = 0.012   # lower = bigger biome regions
 TILE_SCALE  = 0.08    # lower = bigger tile blobs within a biome
