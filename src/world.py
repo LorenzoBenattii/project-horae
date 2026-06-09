@@ -30,6 +30,8 @@ class World:
         self._load_assets()
 
         self.chunks : dict[tuple[int, int], Chunk] = {}
+        self.chunks_raws : dict[tuple[int, int], npt.NDArray] = {}
+        
 
     
 
@@ -51,6 +53,8 @@ class World:
         self.animal_manager = AnimalManager(self.chunks)
 
         self._create_initial_world()
+        for index, chunk in self.chunks.items():
+            self.chunks_raws[index] = chunk.chunk_raw
 
     def _load_assets(self) -> None:
         for img in os.listdir(ASSET_PATH_BACKGROUND):

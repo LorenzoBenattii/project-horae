@@ -19,13 +19,20 @@ if __name__ == "__main__":
     is_moving_left = is_moving_right = is_moving_up = is_moving_down = False
 
     is_running = True
+    animals = [Stag(w.chunks_raws) for _ in range(100)]
+    for animal in animals:
+        w.animal_manager.animals.add(animal)
+        
 
     while is_running:
-        clock.tick(60)
+        #clock.tick(60)
         
         screen.fill((0, 0, 0))
-        w.update(screen, (camerax, cameray))
         
+        for animal in animals:
+            animal.update()
+        w.update(screen, (camerax, cameray))
+
         
 
         if is_moving_left:
