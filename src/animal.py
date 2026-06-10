@@ -156,7 +156,7 @@ class Animal:
 
             if len(coords) > 0:
                 #print("STARTING POSITION FOUND.", chunk_index, coords[0])
-                y, x = coords[0]
+                y, x = random.choice(coords)
                 return chunk_index, (int(y), int(x))
 
     def _choose_target_position(self) -> tuple[tuple[int, int], tuple[int, int]]:
